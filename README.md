@@ -24,8 +24,9 @@ Input data used are for computation of ProtConn are:
   - Global Administrative Unit Layers (GAUL), revision 2015 (2017-02-02). The layer must exists in the working gdb befor running scripts.
   - Terrestrial Ecoregions of the World (Olson et al., 2001). The layer must exists in the working gdb befor running scripts
   
-**TBD**: 1. Prepare a script for  - GDB creation and 
-                                  - copy of required layers (gaul and ecoregions) from DB
+**TBD**: 1. Prepare a script for
+  - GDB creation and
+  - copy of required layers (gaul and ecoregions) from DB
 
 ### 1. GIS processing
 
@@ -38,25 +39,24 @@ The variables for arcpython scripts are declared at the beginning of each script
 
 **TBD**: prepare an external file with variables and import in python at start.
 
-A full run of all the GIS processing scriptsdescribed below takes approximately 3 days in total.
+A full run of all the GIS processing scripts described below takes approximately 3 days in total.
 
 
 **a) Country level**
 
-a.1. [a1country.py](gis_proc/arcpy/a1country.py)
-   - Import polygons and points, bufferize points, merge poly and points.
+ 
+a.1. [exec_simplify_wdpa_all_relevant.sh](gis_proc/exec_simplify_wdpa_all_relevant.sh)
+   - Copy in a new table relevant wdpa and required attributes, simplify polygons, export to shp.
   
-a.2. [exec_simplify_wdpa_all_relevant.sh](gis_proc/exec_simplify_wdpa_all_relevant.sh)
-   - Import wdpa from gdb in Postgis, simplify polygons, export to shp.
-  
-a.3. [a2country.py](gis_proc/arcpy/a2country.py)
-   - Import table from postgis DB (**prompts for password at launch**), process multi iso3 polygons, prepare wdpa flat final, ready for calculation of distances in PostGis (ST_distance)
+a.2. [wdpa_country.py](gis_proc/arcpy/wdpa_country.py)
+   - Copy GAUL layer from existing BaseLayers.gdb.
+   - Import shapefile with simplified wdpa, process multi iso3 polygons, prepare wdpa flat final, ready for calculation of distances in PostGis (ST_distance)
    - Generate near table (much slower than the same operation in postgis, presently is commented and not executed).
   
-a.4. [exec_generate_near_table_country.sh](gis_proc/exec_generate_near_table_country.sh)
+a.3. [exec_generate_near_table_country.sh](gis_proc/exec_generate_near_table_country.sh)
    - Import wdpa from gdb, repair geometries and compute Near Table in Postgis for countries.
 
-Overall processing time is approximately 25 hours (4 hours for steps 1-3, 21 hours for step 4)
+Overall processing time is approximately 25 hours (4 hours for steps 1-2, 21 hours for step 3)
 
 
 
