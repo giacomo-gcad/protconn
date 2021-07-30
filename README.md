@@ -114,22 +114,22 @@ Here below the list of subscripts called by master script.
 **1) Countries**
 
    - [prepare_conefor_files_country.R](conefor/R_scripts/prepare_conefor_files_country.R)
-   - [exec_conefor_country_part1.sh.R](conefor/exec_conefor_country_part1.sh)
-   - [exec_conefor_country_part2.sh.R](conefor/exec_conefor_country_part2.sh)
+   - [exec_conefor_country_part1.sh](conefor/exec_conefor_country_part1.sh)
+   - [exec_conefor_country_part2.sh](conefor/exec_conefor_country_part2.sh)
 
 **2) Countries with bound correction**
 
    - [prepare_conefor_files_bound_correction.R](conefor/R_scripts/prepare_conefor_files_bound_correction.R)
-   - [exec_conefor_bound_correction.sh.R](conefor/exec_conefor_bound_correction.sh)
+   - [exec_conefor_bound_correction.sh](conefor/exec_conefor_bound_correction.sh)
 
 **3) Ecoregions**
 
    - [prepare_conefor_files_ecoregions.R](conefor/R_scripts/prepare_conefor_files_ecoregions.R)
-   - [exec_conefor_eco_part1.sh.R](conefor/exec_conefor_eco_part1.sh)
-   - [exec_conefor_eco_part2.sh.R](conefor/exec_conefor_eco_part2.sh)
+   - [exec_conefor_eco_part1.sh](conefor/exec_conefor_eco_part1.sh)
+   - [exec_conefor_eco_part2.sh](conefor/exec_conefor_eco_part2.sh)
 
 
-In postprocessing/aggregation phase, the two sccripts involved are:
+In postprocessing/aggregation phase, the two R scripts involved are:
 
    - [postproc_protconn_country.R](conefor/R_scripts/postproc_protconn_country.R)
    - [postproc_protconn_eco.R](conefor/R_scripts/postproc_protconn_eco.R)
