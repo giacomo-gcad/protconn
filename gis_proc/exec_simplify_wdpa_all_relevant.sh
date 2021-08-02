@@ -10,6 +10,8 @@ SERVICEDIR="/globes/USERS/GIACOMO/protconn/scripts"
 source ${SERVICEDIR}/protconn.conf
 dbpar="-h ${host} -U ${user} -d ${db}"
 
+## CREATE LOG FOLDER
+mkdir -p ${LOGPATH}
 
 ###########################
 ## 1) IMPORT PREPROCESSED WDPA AND SIMPLIFY FEATURES

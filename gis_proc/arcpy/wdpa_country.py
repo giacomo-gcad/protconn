@@ -21,8 +21,8 @@ print("PROCEDURE STARTED at ", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 print('-------------------------------------------------------')
 
 # Working Geodatabase
-outpath="Z:/globes/USERS/GIACOMO/protconn/data/202101"
-outgdb_name="ProtConn_202101.gdb"
+outpath="Z:/globes/USERS/GIACOMO/protconn/data/202107"
+outgdb_name="ProtConn_202107.gdb"
 outgdb_fullpath = outpath+"/"+outgdb_name+"/"
 
 # Set environment variables
@@ -59,7 +59,7 @@ wdpa_multi_iso3_together_dissolved_ISO3final_1km2_singleparted = outgdb_fullpath
 wdpa_flat_1km_final = outgdb_fullpath+"wdpa_flat_1km_final"
 # all_distances = "all_distances_wdpa_country_300km" # No more needed
 # outfile_dist=outpath+"/"+all_distances+".txt" # No more needed
-outfile_attr="attrib_table_wdpa_flat_202101.txt"
+outfile_attr="attrib_table_wdpa_flat_202107.txt"
 
 # Process: Create GDB 
 if arcpy.Exists(outgdb_fullpath):

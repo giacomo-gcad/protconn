@@ -23,8 +23,9 @@ Input data used are for computation of ProtConn are:
 
   - WDPA (latest gdb file downloaded from [protectedplanet.net](https://www.protectedplanet.n))
   - Global Administrative Unit Layers (GAUL), revision 2015 (2017-02-02). The layer must exists in the working gdb befor running scripts.
-  - Terrestrial Ecoregions of the World (Olson et al., 2001). The layer must exists in the working gdb befor running scripts.
+  - Terrestrial Ecoregions of the World (Olson et al., 2001). The layer must exists in the working gdb before running scripts.
 
+Presently both GAUL and Ecoregions layers are stored as feature classes in the gdb ../data/BaseLayers.gdb and are copied in the working gdb by the relevant script.
 
 ### 1. GIS processing
 
