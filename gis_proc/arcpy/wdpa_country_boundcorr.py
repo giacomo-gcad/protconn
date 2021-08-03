@@ -25,8 +25,8 @@ arcpy.env.workspace = "Z:/globes/USERS/GIACOMO/protconn/data/"
 arcpy.env.overwriteOutput = True
 
 # Output Geodatabase
-outpath="Z:/globes/USERS/GIACOMO/protconn/data/202101"
-outgdb_name="ProtConn_202101.gdb"
+outpath="Z:/globes/USERS/GIACOMO/protconn/data/202107"
+outgdb_name="ProtConn_202107.gdb"
 outgdb_fullpath = outpath+"/"+outgdb_name+"/"
 
 # input shapefile WITHOUT OECM
@@ -42,8 +42,8 @@ Merge_WDPA_flat_land_lyr = "Merge_WDPA_flat_1km2_final_with_land_patches_lyr"
 Merge_WDPA_flat_land_lyr2 = "Merge_WDPA_flat_1km2_final_with_land_patches_lyr2"
 WDPA_plus_LAND_flat_1km2_final = outgdb_fullpath+"wdpa_plus_land_flat_1km_final"
 out_shp="wdpa_plus_land_flat_1km_final.shp"
-outfile_attr="attrib_table_wdpa_plus_land_202101.txt"
-all_distances_wdpa_plus_land100km = "all_distances_wdpa_plus_land100km_202101"
+outfile_attr="attrib_table_wdpa_plus_land_202107.txt"
+all_distances_wdpa_plus_land100km = "all_distances_wdpa_plus_land100km_202107"
 all_distances_wdpa_plus_land100km_fullpath = outgdb_fullpath+all_distances_wdpa_plus_land100km
 outfile_dist=outpath+"/"+all_distances_wdpa_plus_land100km+".txt"
 
@@ -89,7 +89,7 @@ arcpy.CopyFeatures_management(Merge_WDPA_flat_land, WDPA_plus_LAND_flat_1km2_fin
 print("Features copied to final layer")
 
 # # Table to table (txt) with field mapping
-arcpy.TableToTable_conversion(in_rows=WDPA_plus_LAND_flat_1km2_final, out_path=outpath, out_name=outfile_attr, field_mapping='OBJECTID "OBJECTID" true true false 4 Long 0 0 ,First,#,Z:/globes/USERS/GIACOMO/protconn/data/ProtConn_202101.gdb/WDPA_plus_LAND_flat_1km2_final,objectid,-1,-1;ISO3final "ISO3final" true true false 50 Text 0 0 ,First,#,Z:/globes/USERS/GIACOMO/protconn/data/ProtConn_202101.gdb/WDPA_plus_LAND_flat_1km2_final,ISO3final,-1,-1;AREA_GEO "AREA_GEO" true true false 8 Double 0 0 ,First,#,Z:/globes/USERS/GIACOMO/protconn/data/ProtConn_202101.gdb/WDPA_plus_LAND_flat_1km2_final,AREA_GEO,-1,-1;nodeID "nodeID" true true false 4 Long 0 0 ,First,#,Z:/globes/USERS/GIACOMO/protconn/data/ProtConn_202101.gdb/WDPA_plus_LAND_flat_1km2_final,nodeID,-1,-1;Shape_Leng "Shape_Leng" false true true 8 Double 0 0 ,First,#,Z:/globes/USERS/GIACOMO/protconn/data/ProtConn_202101.gdb/WDPA_plus_LAND_flat_1km2_final,Shape_Length,-1,-1;Shape_Area "Shape_Area" false true true 8 Double 0 0 ,First,#,Z:/globes/USERS/GIACOMO/protconn/data/ProtConn_202101.gdb/WDPA_plus_LAND_flat_1km2_final,Shape_Area,-1,-1')
+arcpy.TableToTable_conversion(in_rows=WDPA_plus_LAND_flat_1km2_final, out_path=outpath, out_name=outfile_attr, field_mapping='OBJECTID "OBJECTID" true true false 4 Long 0 0 ,First,#,Z:/globes/USERS/GIACOMO/protconn/data/ProtConn_202107.gdb/WDPA_plus_LAND_flat_1km2_final,objectid,-1,-1;ISO3final "ISO3final" true true false 50 Text 0 0 ,First,#,Z:/globes/USERS/GIACOMO/protconn/data/ProtConn_202107.gdb/WDPA_plus_LAND_flat_1km2_final,ISO3final,-1,-1;AREA_GEO "AREA_GEO" true true false 8 Double 0 0 ,First,#,Z:/globes/USERS/GIACOMO/protconn/data/ProtConn_202107.gdb/WDPA_plus_LAND_flat_1km2_final,AREA_GEO,-1,-1;nodeID "nodeID" true true false 4 Long 0 0 ,First,#,Z:/globes/USERS/GIACOMO/protconn/data/ProtConn_202107.gdb/WDPA_plus_LAND_flat_1km2_final,nodeID,-1,-1;Shape_Leng "Shape_Leng" false true true 8 Double 0 0 ,First,#,Z:/globes/USERS/GIACOMO/protconn/data/ProtConn_202107.gdb/WDPA_plus_LAND_flat_1km2_final,Shape_Length,-1,-1;Shape_Area "Shape_Area" false true true 8 Double 0 0 ,First,#,Z:/globes/USERS/GIACOMO/protconn/data/ProtConn_202107.gdb/WDPA_plus_LAND_flat_1km2_final,Shape_Area,-1,-1')
 print("Attribute Table exported in .txt")
 print("First part of script completed at ", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 print(' ')

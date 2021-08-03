@@ -74,7 +74,7 @@ b.3. [exec_generate_near_table_country_boundcorr.sh](gis_proc/exec_generate_near
    
 **c) Ecoregion level**
 
-c.1. [c1ecoregion.py](gis_proc/arcpy/c1ecoregion.py)
+c.1. [wdpa_ecoregion.py](gis_proc/arcpy/wdpa_ecoregion.py)
    - Select terrestrial ecoregions, dissolve WDPA, intersect it with ecoregions, select polygons over 1km2, add and compute required fields, export attributes
    - Generate near table (much slower than the same operation in postgis, presently is commented and not executed).
    

@@ -25,8 +25,8 @@ arcpy.env.overwriteOutput = True
 arcpy.env.workspace = "Z:/globes/USERS/GIACOMO/protconn/data/"
 
 # Output Geodatabase
-outpath="Z:/globes/USERS/GIACOMO/protconn/data/202101"
-outgdb_name="ProtConn_202101.gdb"
+outpath="Z:/globes/USERS/GIACOMO/protconn/data/202107"
+outgdb_name="ProtConn_202107.gdb"
 outgdb_fullpath = outpath+"/"+outgdb_name+"/"
 
 # Output layers
@@ -43,7 +43,7 @@ wdpa_simpl_dissolved_1km_intersect_ecoreg_1km = "wdpa_simpl_dissolved_1km_inters
 wdpa_simpl_dissolved_1km_intersect_ecoreg_1km_singlepart = outgdb_fullpath+"wdpa_simpl_dissolved_1km_intersect_ecoreg_1km_singlepart"
 wdpa_ecoregions_final = outgdb_fullpath+"wdpa_ecoregions_final"
 all_distances_ecoregions_200km = outgdb_fullpath+"all_distances_ecoregions_200km"
-outfile_attr=outpath+"/"+"attrib_table_ecoregions_202101.txt"
+outfile_attr=outpath+"/"+"attrib_table_ecoregions_202107.txt"
 outfile_dist=outpath+"/"+"all_distances_ecoregions_200km_arcpy.txt"
 
 # Process: copy ecoregions from BaseLayers.gdb
