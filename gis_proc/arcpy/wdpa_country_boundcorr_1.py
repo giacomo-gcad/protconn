@@ -24,8 +24,8 @@ print('-------------------------------------------------------')
 arcpy.env.overwriteOutput = True
 
 # Output Geodatabase
-outpath="Z:/globes/USERS/GIACOMO/protconn/data/202101"
-outgdb_name="ProtConn_202101.gdb"
+outpath="Z:/globes/USERS/GIACOMO/protconn/data/202107"
+outgdb_name="ProtConn_202107.gdb"
 outgdb_fullpath = outpath+"/"+outgdb_name+"/"
 
 # Local variables:
