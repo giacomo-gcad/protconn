@@ -52,10 +52,10 @@ a.2. [wdpa_country.py](gis_proc/arcpy/wdpa_country.py)
    - Import shapefile with simplified wdpa, process multi iso3 polygons, prepare wdpa flat final, ready for calculation of distances in PostGis (ST_distance)
    - Generate near table (much slower than the same operation in postgis, presently is commented and not executed).
   
-a.3. [exec_generate_near_table_country.sh](gis_proc/exec_generate_near_table_country.sh)
-   - Import wdpa from gdb, repair geometries and compute Near Table in Postgis for countries.
+a.3. [exec_near_table_country_parallel.sh](gis_proc/exec_near_table_country_parallel.sh)
+   - Import wdpa from gdb, export attribute table as .txt file, repair geometries and compute Near Table in Postgis for countries. It runs in parallel on 64 cores.  
 
-Overall processing time is approximately 25 hours (4 hours for steps a.1-a.2, 21 hours for step a.3)
+Overall processing time is approximately 400 minutes (120 minutes for steps a.1-a.2, 280 minutes for step a.3)
 
 
 **b) Country level with bound correction**
@@ -65,14 +65,16 @@ b.1. [wdpa_country_boundcorr_1.py](gis_proc/arcpy/wdpa_country_boundcorr_1.py)
 
 b.2. [exec_simplify_gaul_bound_correction.sh](gis_proc/exec_simplify_gaul_bound_correction.sh)
    - Select polygons with area_geo>=1km2
-   - Simplify polygons, export to shp.
+   - Simplify polygons.
 
 b.3. [wdpa_country_boundcorr_2.py](gis_proc/arcpy/wdpa_country_boundcorr_2.py)
-   - Import shapefile, merge gaul and wdpa, repair geometries, export attributes
+   - Import simplified polygons, merge gaul and wdpa, repair geometries.
    - Generate near table (much faster than the same operation in postgis, described below at point b.4).
 
-b.4. [exec_generate_near_table_country_boundcorr.sh](gis_proc/exec_generate_near_table_country_boundcorr.sh)
-   - Import relevant layer from gdb, repair geometries and compute Near Table in Postgis for countries with bound correction (about four times slower than the same operation in arcpy. Its use is deprecated).
+b.4. [exec_near_table_country_bcorr_parallel.sh](gis_proc/exec_near_table_country_bcorr_parallel.sh)
+   - Import relevant layer from gdb, export attribute table as .txt file, repair geometries and compute Near Table in Postgis for countries with bound correction. It runs in parallel on 70 cores.  
+
+Overall processing time is approximately 280 minutes (30 minutes for steps b.1-b.3, 250 minutes for step b.4).  
 
 
 **c) Ecoregion level**
@@ -81,11 +83,12 @@ c.1. [wdpa_ecoregion.py](gis_proc/arcpy/wdpa_ecoregion.py)
    - Select terrestrial ecoregions, dissolve WDPA, intersect it with ecoregions, select polygons over 1km2, add and compute required fields, export attributes
    - Generate near table (much slower than the same operation in postgis, presently is commented and not executed).
    
-c.2. [exec_generate_near_table_ecoregion.sh](gis_proc/exec_generate_near_table_ecoregion.sh)
-   - Import relevant layer from gdb, repair geometries and compute Near Table in Postgis for ecoregions.
+c.2. [exec_near_table_ecoregion_parallel.sh](gis_proc/exec_near_table_ecoregion_parallel.sh)
+   - Import relevant layer from gdb, export attribute table as .txt file, repair geometries and compute Near Table in Postgis for ecoregions.  It runs in parallel on 70 cores. 
    
-  
+Overall processing time is approximately 110 minutes (45 minutes for step c.1, 65 minutes for step c.2).  
 
+  
 **Recommendations and tips**
    - when moving a layer from/to the FIle GDB to/from Postgis it's always worth **to check the number of objects** in input and output. 
  

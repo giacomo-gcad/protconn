@@ -21,8 +21,9 @@ print("PROCEDURE STARTED at ", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 print('-------------------------------------------------------')
 
 # Working Geodatabase
-outpath="Z:/globes/USERS/GIACOMO/protconn/data/202107"
-outgdb_name="ProtConn_202107.gdb"
+wdpadate="202202"
+outpath="Z:/globes/USERS/GIACOMO/protconn/data/"+wdpadate
+outgdb_name="ProtConn_"+wdpadate+".gdb"
 outgdb_fullpath = outpath+"/"+outgdb_name+"/"
 
 # Set environment variables
@@ -43,23 +44,23 @@ gaul_source="Z:/globes/USERS/GIACOMO/protconn/data/BaseLayers.gdb/gaul"
 gaul = outgdb_fullpath+"gaul"
 wdpa_all_relevant_simpl_dissolved_iso3_clipped_land = outgdb_fullpath+"wdpa_all_relevant_simpl_dissolved_iso3_clipped_land"
 dissolved_iso3_clipped_land_over_1_km2 = outgdb_fullpath+"dissolved_iso3_clipped_land_over_1_km2"
-select_only_multi_iso3 = dissolved_iso3_clipped_land_over_1_km2
-select_NO_multi_iso3 = dissolved_iso3_clipped_land_over_1_km2
-wdpa_NO_multi_iso3 = outgdb_fullpath+"wdpa NO multi iso3"
+# select_only_multi_iso3 = dissolved_iso3_clipped_land_over_1_km2
+# select_NO_multi_iso3 = dissolved_iso3_clipped_land_over_1_km2
+wdpa_NO_multi_iso3 = outgdb_fullpath+"wdpa_NO_multi_iso3"
 iso3_no_multi = outgdb_fullpath+"iso3_no_multi"
 iso3_multi = outgdb_fullpath+"iso3_multi"
 iso3_multi_erased = outgdb_fullpath+"iso3_multi_erased"
 intersected_gaul_erased = outgdb_fullpath+"intersected_gaul_erased"
-wdpa_only_multi_iso3 = outgdb_fullpath+"wdpa only multi iso3"
+wdpa_only_multi_iso3 = outgdb_fullpath+"wdpa_only_multi_iso3"
 wdpa_multi_iso3_together = outgdb_fullpath+"wdpa_multi_iso3_together"
 wdpa_multi_iso3_together_dissolved_ISO3final = outgdb_fullpath+"wdpa_multi_iso3_together_dissolved_ISO3final"
 wdpa_multi_iso3_together_dissolved_ISO3final_LYR = "wdpa_multi_iso3_together_dissolved_ISO3final_LYR"
 wdpa_multi_iso3_together_dissolved_ISO3final_1km2 = outgdb_fullpath+"wdpa_multi_iso3_together_dissolved_ISO3final_1km2"
 wdpa_multi_iso3_together_dissolved_ISO3final_1km2_singleparted = outgdb_fullpath+"wdpa_multi_iso3_together_dissolved_ISO3final_1km2_singleparted"
-wdpa_flat_1km_final = outgdb_fullpath+"wdpa_flat_1km_final"
+wdpa_flat_1km_final = outgdb_fullpath+"wdpa_flat_1km_final_"+wdpadate
 # all_distances = "all_distances_wdpa_country_300km" # No more needed
 # outfile_dist=outpath+"/"+all_distances+".txt" # No more needed
-outfile_attr="attrib_table_wdpa_flat_202107.txt"
+outfile_attr="attrib_table_wdpa_flat_"+wdpadate+".txt"
 
 # Process: Create GDB 
 if arcpy.Exists(outgdb_fullpath):
@@ -95,8 +96,13 @@ print("Geometries repaired")
 arcpy.AddGeometryAttributes_management(wdpa_all_relevant_simpl_dissolved_ISO3, "AREA_GEODESIC", "", "SQUARE_KILOMETERS", "GEOGCS['GCS_WGS_1984',DATUM['D_WGS_1984',SPHEROID['WGS_1984',6378137.0,298.257223563]],PRIMEM['Greenwich',0.0],UNIT['Degree',0.0174532925199433]]")
 print("Area_geo computed")
 
+
+########################
 # Process: Make Feature Layer over 1 km2
-arcpy.MakeFeatureLayer_management(wdpa_all_relevant_simpl_dissolved_ISO3, dissolved_iso3_over_1_km2, "\"AREA_GEO\" >=1", "", "iso3 iso3 VISIBLE NONE;AREA_GEO AREA_GEO VISIBLE NONE")
+arcpy.MakeFeatureLayer_management(wdpa_all_relevant_simpl_dissolved_ISO3, "dissolved_iso3_over_1_km2_lyr")
+arcpy.SelectLayerByAttribute_management("dissolved_iso3_over_1_km2_lyr","NEW_SELECTION", "\"AREA_GEO\" >=1")
+arcpy.CopyFeatures_management("dissolved_iso3_over_1_km2_lyr",dissolved_iso3_over_1_km2)
+print("Feature Layer over 1km2 created")
 
 # Process: Clip
 arcpy.Clip_analysis(dissolved_iso3_over_1_km2, gaul, wdpa_all_relevant_simpl_dissolved_iso3_clipped_land, "")
@@ -113,7 +119,7 @@ arcpy.MakeFeatureLayer_management(wdpa_all_relevant_simpl_dissolved_iso3_clipped
 arcpy.SelectLayerByAttribute_management(dissolved_iso3_clipped_land_over_1_km2, "NEW_SELECTION", "iso3 NOT LIKE '%;%'")
 
 # Process: Make Feature Layer NO multi iso3
-arcpy.MakeFeatureLayer_management(select_NO_multi_iso3, wdpa_NO_multi_iso3, "", "", "iso3 iso3 VISIBLE NONE;AREA_GEO AREA_GEO VISIBLE NONE;Shape_length Shape_length VISIBLE NONE;Shape_area Shape_area VISIBLE NONE")
+arcpy.MakeFeatureLayer_management(dissolved_iso3_clipped_land_over_1_km2, wdpa_NO_multi_iso3, "", "", "iso3 iso3 VISIBLE NONE;AREA_GEO AREA_GEO VISIBLE NONE;Shape_length Shape_length VISIBLE NONE;Shape_area Shape_area VISIBLE NONE")
 
 # Process: Copy Features NO multi iso3
 arcpy.CopyFeatures_management(wdpa_NO_multi_iso3, iso3_no_multi, "", "0", "0", "0")
@@ -130,7 +136,7 @@ print("Features no-multi iso3 processed")
 arcpy.SelectLayerByAttribute_management(dissolved_iso3_clipped_land_over_1_km2, "NEW_SELECTION", "iso3 LIKE '%;%'")
 
 # Process: Make Feature Layer only multi iso3
-arcpy.MakeFeatureLayer_management(select_only_multi_iso3, wdpa_only_multi_iso3, "", "", "iso3 iso3 VISIBLE NONE;AREA_GEO AREA_GEO VISIBLE NONE;Shape_length Shape_length VISIBLE NONE;Shape_area Shape_area VISIBLE NONE")
+arcpy.MakeFeatureLayer_management(dissolved_iso3_clipped_land_over_1_km2, wdpa_only_multi_iso3, "", "", "iso3 iso3 VISIBLE NONE;AREA_GEO AREA_GEO VISIBLE NONE;Shape_length Shape_length VISIBLE NONE;Shape_area Shape_area VISIBLE NONE")
 
 # Process: Copy Features
 arcpy.CopyFeatures_management(wdpa_only_multi_iso3, iso3_multi, "", "0", "0", "0")

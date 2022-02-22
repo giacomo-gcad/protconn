@@ -59,14 +59,14 @@ Distances <- Distances[!duplicated(Distances[1:2]),]
 
 Nodes <- Raw_Nodes
 
-## Remove columns that are not needed
-Nodes$OBJECTID <- Nodes$nodeID
-Nodes$OID <- NULL
-Nodes$nodeID <- NULL ## Commented out by GD on 20191128
-Nodes$ORIG_FID <- NULL
-Nodes$Shape_Length <- NULL ## Commented out by GD on 20191127
-# Nodes$Shape_Leng <- NULL ## Added By GD on 20191128 
-Nodes$Shape_Area <- NULL
+# ## Remove columns that are not needed
+# Nodes$OBJECTID <- Nodes$nodeID
+# Nodes$OID <- NULL
+# Nodes$nodeID <- NULL ## Commented out by GD on 20191128
+# Nodes$ORIG_FID <- NULL
+# Nodes$Shape_Length <- NULL ## Commented out by GD on 20191127
+# # Nodes$Shape_Leng <- NULL ## Added By GD on 20191128 
+# Nodes$Shape_Area <- NULL
 
 list_ISO3 <- unique(Nodes$ISO3final)
 ## The following is the number of different ISO3 codes that we have in the PA data to be processed

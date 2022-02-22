@@ -1,29 +1,36 @@
+-- PREPARE SUBSET OF RECORDS TO WORK ON
+
+DROP TABLE IF EXISTS :OUTSCHEMA.:INPUT_TILE; CREATE TABLE  :OUTSCHEMA.:INPUT_TILE AS
+WITH wdpa_all_:CYCLE_N AS (SELECT * FROM :OUTSCHEMA.:INTABLE ORDER BY objectid)
+SELECT * FROM wdpa_all_:CYCLE_N
+:RANGE_S1 :RANGE_S2 :RANGE_S3 :RANGE_S4;
+
 -- Generate Near Table for ecoregions (can take several days...)
 
 -- STEP 1 repair geometries
-ALTER TABLE :OUTSCHEMA.:INTABLE
+ALTER TABLE :OUTSCHEMA.:INPUT_TILE
 ADD COLUMN geom_was_invalid boolean DEFAULT FALSE;
 
-UPDATE :OUTSCHEMA.:INTABLE
+UPDATE :OUTSCHEMA.:INPUT_TILE
 SET geom_was_invalid = TRUE 
 WHERE ST_IsValid(shape) IS FALSE;
 
-UPDATE :OUTSCHEMA.:INTABLE
+UPDATE :OUTSCHEMA.:INPUT_TILE
 SET shape = ST_MakeValid(shape)
 WHERE geom_was_invalid IS TRUE;
 
-ALTER TABLE :OUTSCHEMA.:INTABLE
+ALTER TABLE :OUTSCHEMA.:INPUT_TILE
 DROP COLUMN geom_was_invalid;
 
 -- STEP 2 compute near table (may take several days...)
 -- create 2 temp tables with spatial index
-CREATE TEMPORARY TABLE foo1 AS
-(SELECT nodeid "IN_FID", shape::geography as gg1 FROM :OUTSCHEMA.:INTABLE);
-CREATE INDEX foo1_idx ON foo1 USING GIST (geography(gg1));
+CREATE TEMPORARY TABLE temp1_:CYCLE_N AS
+(SELECT nodeid "IN_FID", shape::geography as gg1 FROM :OUTSCHEMA.:INPUT_TILE );
+CREATE INDEX temp1_idx_:CYCLE_N ON temp1_:CYCLE_N USING GIST (geography(gg1));
 
-CREATE TEMPORARY TABLE foo2 AS
+CREATE TEMPORARY TABLE temp2_:CYCLE_N AS
 (SELECT nodeid "NEAR_FID", shape::geography as gg2 FROM :OUTSCHEMA.:INTABLE);
-CREATE INDEX foo2_idx ON foo2 USING GIST (geography(gg2));
+CREATE INDEX temp2_idx_:CYCLE_N ON temp2_:CYCLE_N USING GIST (geography(gg2));
 
 --create distances table
 DROP TABLE IF EXISTS :OUTSCHEMA.:OUTTABLE;
@@ -36,7 +43,7 @@ SELECT DISTINCT
 "IN_FID",
 "NEAR_FID",
 ST_Distance(gg1, gg2) AS "NEAR_DIST"
-FROM foo1,foo2
+FROM temp1_:CYCLE_N,temp2_:CYCLE_N
 WHERE ST_DWithin(gg1,gg2,200000, TRUE) --Here we set the maximum distance (200 km) for calculations
 )
 

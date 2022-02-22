@@ -6,10 +6,6 @@
 # Description: 
 # ---------------------------------------------------------------------------
 
-print (" ")
-pw = input("Please enter password for h05ibex: ")
-print ("\n"*100)
-
 
 # Import arcpy module
 import sys
@@ -38,26 +34,31 @@ db="wolfe"
 protconn_schema="ind_protconn"
 
 # Output Geodatabase
-outpath="Z:/globes/USERS/GIACOMO/protconn/data/202107"
-outgdb_name="ProtConn_202107.gdb"
+wdpadate="202202"
+outpath="Z:/globes/USERS/GIACOMO/protconn/data/"+wdpadate
+outgdb_name="ProtConn_"+wdpadate+".gdb"
 outgdb_fullpath = outpath+"/"+outgdb_name+"/"
 
 # Local variables:
 gaul_singleparted_shape_simpl="gaul_singleparted_shape_simpl"
 # input_shp = outpath+gaul_singleparted_shape_simpl+".shp"
 gaul_singleparted_shape_simpl_full_path = outgdb_fullpath+gaul_singleparted_shape_simpl
-wdpa_flat_1km2_final = outgdb_fullpath+"wdpa_flat_1km_final"
+wdpa_flat_1km_final = outgdb_fullpath+"wdpa_flat_1km_final_"+wdpadate
 Merge_WDPA_flat_land = outgdb_fullpath+"Merge_WDPA_flat_1km2_final_with_land_patches"
 Merge_WDPA_flat_land_lyr = "Merge_WDPA_flat_1km2_final_with_land_patches_lyr"
 Merge_WDPA_flat_land_lyr2 = "Merge_WDPA_flat_1km2_final_with_land_patches_lyr2"
-WDPA_plus_LAND_flat_1km2_final = outgdb_fullpath+"wdpa_plus_land_flat_1km_final"
+WDPA_plus_LAND_flat_1km2_final = outgdb_fullpath+"wdpa_plus_land_flat_1km_final_"+wdpadate
 out_shp="wdpa_plus_land_flat_1km_final.shp"
-outfile_attr="attrib_table_wdpa_plus_land_202107.txt"
-all_distances_wdpa_plus_land100km = "all_distances_wdpa_plus_land100km_202107"
-all_distances_wdpa_plus_land100km_fullpath = outgdb_fullpath+all_distances_wdpa_plus_land100km
+# outfile_attr="attrib_table_wdpa_plus_land_"+wdpadate+".txt"
+outfile_attr="attrib_table_wdpa_plus_land_"+wdpadate+"_arcpy_retry.txt"
+all_distances_wdpa_plus_land100km = "all_distances_wdpa_plus_land100km_"+wdpadate
+all_distances_wdpa_plus_land100km_fullpath = outgdb_fullpath+all_distances_wdpa_plus_land100km+wdpadate
 outfile_dist=outpath+"/"+all_distances_wdpa_plus_land100km+".txt"
 
 # Connect to DB
+print (" ")
+pw = input("Please enter password for h05ibex: ")
+print ("\n"*100)
 arcpy.CreateDatabaseConnection_management(out_folder_path=DBConnectionFilepath, out_name=host, database_platform="POSTGRESQL", instance=host, account_authentication="DATABASE_AUTH", username="h05ibex", password=pw, save_user_pass="SAVE_USERNAME", database=db, schema=protconn_schema)
 print("Connection to DB created")
 
@@ -92,7 +93,7 @@ arcpy.CalculateField_management(gaul_singleparted_shape_simpl_full_path, "ISO3fi
 print("Additional fields added and calculated")
 
 # Process: Merge
-arcpy.Merge_management([gaul_singleparted_shape_simpl_full_path,wdpa_flat_1km2_final], Merge_WDPA_flat_land)
+arcpy.Merge_management([gaul_singleparted_shape_simpl_full_path,wdpa_flat_1km_final], Merge_WDPA_flat_land)
 print("Gaul and wdpa_flat merged")
 
 # Process: Make Feature Layer
@@ -125,27 +126,28 @@ print("Features copied to final layer")
 arcpy.CalculateField_management(WDPA_plus_LAND_flat_1km2_final, field="objectid", expression="!OBJECTID_1!", expression_type="PYTHON_9.3", code_block="")
 print("Field objectid updated")
 
-# Process: Copy Features to shp (NO MORE NEEDED, gdb layer is imported directly in postgis)
-# arcpy.FeatureClassToFeatureClass_conversion(in_features=WDPA_plus_LAND_flat_1km2_final, out_path=outpath, out_name=out_shp, where_clause="", field_mapping='objectid "objectid" true true false 4 Long 0 0 ,First,#,WDPA_plus_LAND_flat_1km2_final,objectid,-1,-1;AREA_GEO "AREA_GEO" true true false 8 Double 0 0 ,First,#,WDPA_plus_LAND_flat_1km2_final,AREA_GEO,-1,-1;nodeID "nodeID" true true false 4 Long 0 0 ,First,#,WDPA_plus_LAND_flat_1km2_final,nodeID,-1,-1;ISO3final "ISO3final" true true false 50 Text 0 0 ,First,#,WDPA_plus_LAND_flat_1km2_final,ISO3final,-1,-1;Shape_Leng "Shape_Leng" false true true 8 Double 0 0 ,First,#,WDPA_plus_LAND_flat_1km2_final,Shape_Length,-1,-1;Shape_Area "Shape_Area" false true true 8 Double 0 0 ,First,#,WDPA_plus_LAND_flat_1km2_final,Shape_Area,-1,-1', config_keyword="")
-# print("wdpa_plus_land_flat_1km2_final exported in shapefile")
-
 # # Table to table (txt) with field mapping
-arcpy.TableToTable_conversion(in_rows=WDPA_plus_LAND_flat_1km2_final, out_path=outpath, out_name=outfile_attr, field_mapping='OBJECTID "OBJECTID" true true false 4 Long 0 0 ,First,#,Z:/globes/USERS/GIACOMO/protconn/data/ProtConn_202107.gdb/WDPA_plus_LAND_flat_1km2_final,objectid,-1,-1;ISO3final "ISO3final" true true false 50 Text 0 0 ,First,#,Z:/globes/USERS/GIACOMO/protconn/data/ProtConn_202107.gdb/WDPA_plus_LAND_flat_1km2_final,ISO3final,-1,-1;AREA_GEO "AREA_GEO" true true false 8 Double 0 0 ,First,#,Z:/globes/USERS/GIACOMO/protconn/data/ProtConn_202107.gdb/WDPA_plus_LAND_flat_1km2_final,AREA_GEO,-1,-1;nodeID "nodeID" true true false 4 Long 0 0 ,First,#,Z:/globes/USERS/GIACOMO/protconn/data/ProtConn_202107.gdb/WDPA_plus_LAND_flat_1km2_final,nodeID,-1,-1;Shape_Leng "Shape_Leng" false true true 8 Double 0 0 ,First,#,Z:/globes/USERS/GIACOMO/protconn/data/ProtConn_202107.gdb/WDPA_plus_LAND_flat_1km2_final,Shape_Length,-1,-1;Shape_Area "Shape_Area" false true true 8 Double 0 0 ,First,#,Z:/globes/USERS/GIACOMO/protconn/data/ProtConn_202107.gdb/WDPA_plus_LAND_flat_1km2_final,Shape_Area,-1,-1')
+arcpy.TableToTable_conversion(in_rows=WDPA_plus_LAND_flat_1km2_final, out_path=outpath, out_name=outfile_attr, field_mapping='OBJECTID "OBJECTID" true true false 4 Long 0 0 ,First,#,Z:/globes/USERS/GIACOMO/protconn/data/ProtConn_202202.gdb/wdpa_plus_land_flat_1km_final_202202,objectid,-1,-1;ISO3final "ISO3final" true true false 50 Text 0 0 ,First,#,Z:/globes/USERS/GIACOMO/protconn/data/ProtConn_202202.gdb/wdpa_plus_land_flat_1km_final_202202,ISO3final,-1,-1;AREA_GEO "AREA_GEO" true true false 8 Double 0 0 ,First,#,Z:/globes/USERS/GIACOMO/protconn/data/ProtConn_202202.gdb/wdpa_plus_land_flat_1km_final_202202,AREA_GEO,-1,-1;nodeID "nodeID" true true false 4 Long 0 0 ,First,#,Z:/globes/USERS/GIACOMO/protconn/data/ProtConn_202202.gdb/wdpa_plus_land_flat_1km_final_202202,nodeID,-1,-1;Shape_Leng "Shape_Leng" false true true 8 Double 0 0 ,First,#,Z:/globes/USERS/GIACOMO/protconn/data/ProtConn_202202.gdb/wdpa_plus_land_flat_1km_final_202202,Shape_Length,-1,-1;Shape_Area "Shape_Area" false true true 8 Double 0 0 ,First,#,Z:/globes/USERS/GIACOMO/protconn/data/ProtConn_202202.gdb/wdpa_plus_land_flat_1km_final_202202,Shape_Area,-1,-1')
+# arcpy.TableToTable_conversion(in_rows=WDPA_plus_LAND_flat_1km2_final, out_path=outpath, out_name=outfile_attr)
 print("Attribute Table exported in .txt")
 print("First part of script completed at ", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 print(' ')
 
-# Process: Generate Near Table
-print("Generating Near Table, please wait... about 1 day")
-print("Meanwhile, you could execute in docker the script /globes/USERS/GIACOMO/protconn/scripts/exec_generate_near_table_country_boundcorr.sh")
-print("The fastest script will get an award in nature.")
+# Process: Copy Features to shp (NO MORE NEEDED, gdb layer is imported directly in postgis)
+# arcpy.FeatureClassToFeatureClass_conversion(in_features=WDPA_plus_LAND_flat_1km2_final, out_path=outpath, out_name=out_shp, where_clause="", field_mapping='objectid "objectid" true true false 4 Long 0 0 ,First,#,WDPA_plus_LAND_flat_1km2_final,objectid,-1,-1;AREA_GEO "AREA_GEO" true true false 8 Double 0 0 ,First,#,WDPA_plus_LAND_flat_1km2_final,AREA_GEO,-1,-1;nodeID "nodeID" true true false 4 Long 0 0 ,First,#,WDPA_plus_LAND_flat_1km2_final,nodeID,-1,-1;ISO3final "ISO3final" true true false 50 Text 0 0 ,First,#,WDPA_plus_LAND_flat_1km2_final,ISO3final,-1,-1;Shape_Leng "Shape_Leng" false true true 8 Double 0 0 ,First,#,WDPA_plus_LAND_flat_1km2_final,Shape_Length,-1,-1;Shape_Area "Shape_Area" false true true 8 Double 0 0 ,First,#,WDPA_plus_LAND_flat_1km2_final,Shape_Area,-1,-1', config_keyword="")
+# print("wdpa_plus_land_flat_1km2_final exported in shapefile")
 
-arcpy.GenerateNearTable_analysis(WDPA_plus_LAND_flat_1km2_final, WDPA_plus_LAND_flat_1km2_final, all_distances_wdpa_plus_land100km_fullpath, "100 Kilometers", "NO_LOCATION", "NO_ANGLE", "ALL", "", "GEODESIC")
-print("Near Table generated in arcgis")
+# # Process: Generate Near Table
+# print("Generating Near Table, please wait... about 1 day")
+# print("Meanwhile, you could execute in docker the script /globes/USERS/GIACOMO/protconn/scripts/exec_generate_near_table_country_boundcorr.sh")
+# print("The fastest script will get an award in nature.")
 
-# Process: Copy Rows
-arcpy.CopyRows_management(all_distances_wdpa_plus_land100km_fullpath, outfile_dist)
-print("Near Table exported in .txt")
+# arcpy.GenerateNearTable_analysis(WDPA_plus_LAND_flat_1km2_final, WDPA_plus_LAND_flat_1km2_final, all_distances_wdpa_plus_land100km_fullpath, "100 Kilometers", "NO_LOCATION", "NO_ANGLE", "ALL", "", "GEODESIC")
+# print("Near Table generated in arcgis")
+
+# # Process: Copy Rows
+# arcpy.CopyRows_management(all_distances_wdpa_plus_land100km_fullpath, outfile_dist)
+# print("Near Table exported in .txt")
 
 print('-------------------------------------------------------')
 endtime=datetime.now()
