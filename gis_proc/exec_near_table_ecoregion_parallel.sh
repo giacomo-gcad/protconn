@@ -78,7 +78,7 @@ wait
 echo "Near Table for Ecoregion Generated in "${runtime}" minutes"
 
 ############################################################################################################
-## 3) MERGE ALL BLOCK TABLES, EXPORT TO txt AND REMOVE INTERMEDIATE TABLES
+## 4) MERGE ALL BLOCK TABLES, EXPORT TO txt AND REMOVE INTERMEDIATE TABLES
 echo "Now merging all block tables into only one and exporting to txt file"
 
 sql_merge="DROP TABLE IF EXISTS ${protconn_schema}.${raw_distance_eco};CREATE TABLE ${protconn_schema}.${raw_distance_eco}
