@@ -21,7 +21,7 @@ The ProtConn analysis step is based on bash, R and psql scripts. **Conefor with 
 
 Input data used are for computation of ProtConn are:
 
-  - WDPA (latest gdb file downloaded from [protectedplanet.net](https://www.protectedplanet.n))
+  - WDPA (latest gdb file downloaded from [protectedplanet.net](https://www.protectedplanet.net))
   - Global Administrative Unit Layers (GAUL), revision 2015 (2017-02-02). The layer must exists in the working gdb befor running scripts.
   - Terrestrial Ecoregions of the World (Olson et al., 2001). The layer must exists in the working gdb before running scripts.
 
@@ -50,7 +50,7 @@ a.1. [exec_simplify_wdpa_all_relevant.sh](gis_proc/exec_simplify_wdpa_all_releva
 a.2. [wdpa_country.py](gis_proc/arcpy/wdpa_country.py)
    - Copy GAUL layer from existing BaseLayers.gdb.
    - Import shapefile with simplified wdpa, process multi iso3 polygons, prepare wdpa flat final, ready for calculation of distances in PostGis (ST_distance)
-   - Generate near table (much slower than the same operation in postgis, presently is commented and not executed).
+   - Generate near table (much slower than the same operation in postgis, described below. Presently it's commented and not executed).
   
 a.3. [exec_near_table_country_parallel.sh](gis_proc/exec_near_table_country_parallel.sh)
    - Import wdpa from gdb, export attribute table as .txt file, repair geometries and compute Near Table in Postgis for countries. It runs in parallel on 64 cores.  
@@ -69,10 +69,10 @@ b.2. [exec_simplify_gaul_bound_correction.sh](gis_proc/exec_simplify_gaul_bound_
 
 b.3. [wdpa_country_boundcorr_2.py](gis_proc/arcpy/wdpa_country_boundcorr_2.py)
    - Import simplified polygons, merge gaul and wdpa, repair geometries.
-   - Generate near table (much faster than the same operation in postgis, described below at point b.4).
+   - Generate near table (much slower than the same operation in postgis, described below. Presently it's commented and not executed).
 
 b.4. [exec_near_table_country_bcorr_parallel.sh](gis_proc/exec_near_table_country_bcorr_parallel.sh)
-   - Import relevant layer from gdb, export attribute table as .txt file, repair geometries and compute Near Table in Postgis for countries with bound correction. It runs in parallel on 70 cores.  
+   - Import relevant layer from gdb, export attribute table as .txt file, repair geometries and compute Near Table in Postgis for countries with bound correction. It runs in parallel on 72 cores.  
 
 Overall processing time is approximately 280 minutes (30 minutes for steps b.1-b.3, 250 minutes for step b.4).  
 
@@ -96,15 +96,19 @@ Overall processing time is approximately 110 minutes (45 minutes for step c.1, 6
 ### 2. ProtConn Analysis in Conefor
 
 Scripts for conefor analysis are devoped in bash, psql and R.
-Conefor analysis is executed three times: 
+Conefor analysis is executed five times: 
 
-1) for countries;
+1) for countries, including transboundary PAs;
 
-2) for countries with bound correction (i.e. considering also PAs that are up to a given maximum distance - 300 km);
+2) for countries, excluding transboundary PAs;
 
-3) for ecoregions.
+3) for countries with bound correction (i.e. considering also PAs that are up to a given maximum distance - 300 km);
 
-For each of the above three runs, input data used (all produced with GIS processing step) are:
+4) for ecoregions, including transboundary PAs;
+
+5) for ecoregions, excluding transboundary PAs;
+
+For each of the above runs, input data used (all produced with GIS processing step) are:
 
    - attributes table file. It **must** include a unique identifier (iso3 as text for countries, eco_id as integer for ecoregions) and area in km2 for each object.
    - distances file, generated either in postgis or arcpy.

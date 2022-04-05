@@ -19,7 +19,6 @@ dbpar="-h ${host} -U ${user} -d ${db}"
 dbpar2="-h ${host} -U ${user} -d ${db} -w"
 
 ###########################################################################################################
-### USO PER PROVA LA VERSIONE 202107 GIA' PRESENTE
 ## 1) IMPORT WDPA_FLAT_1KM_FINAL GDB IN POSTGRES
 echo "Now importing wdpa final in PG..."
 ogr2ogr \
@@ -33,8 +32,8 @@ PG:"host=${host} user=${user} dbname=${db} active_schema=${protconn_schema} pass
 ${DATADIR}/${gdb_name} ${wdpa_flat_1km_final}
 
 wait
-end=`date +%s`
-runtime=$(((end-first_start) / 60))
+end0=`date +%s`
+runtime=$(((end0-first_start) / 60))
 echo "wdpa final imported in PG as table "${protconn_schema}".${wdpa_flat_1km_final} in "${runtime}" minutes"
 
 ##################################################################
@@ -44,7 +43,7 @@ echo "\copy ${protconn_schema}.${raw_nodes_cnt} TO ${raw_nodes_file_cnt} delimit
 psql ${dbpar} -t -f ${SQLDIR}/export_atts_table_to_txt.sql
 
 end1=`date +%s`
-runtime=$(((end1-end) / 60))
+runtime=$(((end1-end0) / 60))
 wait
 echo "Attributs Table for Country generated in "${runtime}" minutes"
 

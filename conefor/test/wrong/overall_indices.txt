@@ -1,0 +1,7 @@
+F	462.573
+AWF	1.03399e+07
+PCnum	5.11304e+08
+EC(PC)	22612
+PCintra(%)	95.0518
+PCdirect(%)	2.02225
+PCstep(%)	2.9259

@@ -32,7 +32,7 @@ for TIL in $(for i in $(eval echo {0..$NCORES}); do ((start=${TILESIZE}*$i)); ec
 		fi
 		echo "./conefor2.7.3Linux -nodeFile nodes_${iso3_suffix}_${yearsuffix}_WITHOUT_TRANS -conFile distances_${iso3_suffix}_${yearsuffix}_WITHOUT_TRANS -prefix ${iso3_suffix}_${yearsuffix}_WITHOUT_TRANS -t dist -confProb 10000 0.5 -PC -F -AWF onlyoverall"
 	done
-done | parallel -j ${NCORES} --joblog ${LOGPATH}/parallel_conefor_country_part2.log
+done | parallel -j ${NCORES}
 
 ## SORT THE RESULTS FILE FOR COUNTRY WITHOUT TRANS BY ISO3 SKIPPING THE HEADER
 ## A NEW FILE IS CREATED AND THE ORIGINAL DELETED

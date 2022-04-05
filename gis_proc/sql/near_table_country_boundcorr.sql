@@ -1,6 +1,6 @@
 -- PREPARE SUBSET OF RECORDS TO WORK ON
 
-DROP TABLE IF EXISTS :OUTSCHEMA.:INPUT_TILE; CREATE TABLE  :OUTSCHEMA.:INPUT_TILE AS
+DROP TABLE IF EXISTS :INPUT_FULL; CREATE TABLE  :INPUT_FULL AS
 WITH wdpa_all_:CYCLE_N AS (SELECT * FROM :OUTSCHEMA.:INTABLE ORDER BY objectid)
 SELECT * FROM wdpa_all_:CYCLE_N
 :RANGE_S1 :RANGE_S2 :RANGE_S3 :RANGE_S4;
@@ -8,28 +8,28 @@ SELECT * FROM wdpa_all_:CYCLE_N
 -- Generate Near Table for countries (can take several days...)
 
 -- STEP 1 repair geometries
-ALTER TABLE :OUTSCHEMA.:INPUT_TILE
+ALTER TABLE :INPUT_FULL
 ADD COLUMN geom_was_invalid boolean DEFAULT FALSE;
 
-UPDATE :OUTSCHEMA.:INPUT_TILE
+UPDATE :INPUT_FULL
 SET geom_was_invalid = TRUE 
 WHERE ST_IsValid(shape) IS FALSE;
 
-UPDATE :OUTSCHEMA.:INPUT_TILE
+UPDATE :INPUT_FULL
 SET shape = ST_MakeValid(shape)
 WHERE geom_was_invalid IS TRUE;
 
-ALTER TABLE :OUTSCHEMA.:INPUT_TILE
+ALTER TABLE :INPUT_FULL
 DROP COLUMN geom_was_invalid;
 
 -- STEP 2 compute near table
 -- create 2 temp tables with spatial index
 CREATE TEMPORARY TABLE temp1_:CYCLE_N AS
-(SELECT nodeid "IN_FID", shape::geography as gg1 FROM :OUTSCHEMA.:INPUT_TILE );
+(SELECT objectid "IN_FID", shape::geography as gg1 FROM :INPUT_FULL );
 CREATE INDEX temp1_idx_:CYCLE_N ON temp1_:CYCLE_N USING GIST (geography(gg1));
 
 CREATE TEMPORARY TABLE temp2_:CYCLE_N AS
-(SELECT nodeid "NEAR_FID", shape::geography as gg2 FROM :OUTSCHEMA.:INTABLE);
+(SELECT objectid "NEAR_FID", shape::geography as gg2 FROM :OUTSCHEMA.:INTABLE);
 CREATE INDEX temp2_idx_:CYCLE_N ON temp2_:CYCLE_N USING GIST (geography(gg2));
 
 --create distances table
@@ -54,5 +54,5 @@ SELECT
 ROUND("NEAR_DIST"::numeric,1) "NEAR_DIST",
 row_number() over (PARTITION BY "IN_FID" ORDER BY "NEAR_DIST") as "NEAR_RANK"
 FROM finaltable
-WHERE "NEAR_DIST">0
+--WHERE "NEAR_DIST">0 --commented out on 20220329 to retry
 ORDER BY "IN_FID", "NEAR_RANK";

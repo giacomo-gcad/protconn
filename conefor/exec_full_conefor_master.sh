@@ -21,6 +21,7 @@ dbpar="-h ${host} -U ${user} -d ${db} -p ${port}"
 
 ## PREPARE FOLDERS AND COPY REQUIRED FILES
 mkdir -p ${temp_folder}
+mkdir -p ${LOGPATH}
 mkdir -p ${results_folder}
 
 mkdir -p ${cnt_with_trans}

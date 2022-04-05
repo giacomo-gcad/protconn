@@ -13,7 +13,7 @@ source ${BASEDIR}/protconn.conf
 
 ## PARALLEL CONEFOR CYCLE: RUN CONEFOR FOR COUNTRIES WITH TRANS
 echo "Now running Conefor for bound correction  in parallel..."
-NCORES=60
+NCORES=42
 ((ALLCNT=$(ls ${bound_corr}/nodes*|wc -l)+1))
 ((TILESIZE=(${ALLCNT}+(${NCORES}-1))/${NCORES}))
 
@@ -31,7 +31,7 @@ for TIL in $(for i in $(eval echo {0..$NCORES}); do ((start=${TILESIZE}*$i)); ec
 		fi
 		echo "./conefor2.7.3Linux -nodeFile nodes_${iso3_suffix}_${yearsuffix} -conFile distances_${iso3_suffix}_${yearsuffix} -prefix "${iso3_suffix}"_${yearsuffix} -t dist -confProb 10000 0.5 -PC -F -AWF onlyoverall"
 	done
-done | parallel -j ${NCORES} --joblog ${LOGPATH}/parallel_conefor_boundcorr.log
+done | parallel -j ${NCORES}
 
 ## SORT THE RESULTS FILE FOR BOUND CORRECTION BY ISO3 SKIPPING THE HEADER
 ## A NEW FILE IS CREATED AND THE ORIGINAL DELETED TO AVOID MESSING WITH THE OTHER RESULTS FILES

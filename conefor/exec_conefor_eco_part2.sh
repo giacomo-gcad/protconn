@@ -31,7 +31,7 @@ for TIL in $(for i in $(eval echo {0..$NCORES}); do ((start=${TILESIZE}*$i)); ec
 		eco_suffix=${eco_idcode}
 		echo "./conefor2.7.3Linux -nodeFile nodes_${eco_idcode}_${yearsuffix}_WITHOUT_TRANS -conFile distances_${eco_idcode}_${yearsuffix}_WITHOUT_TRANS -prefix "${eco_suffix}"_${yearsuffix}_WITHOUT_TRANS -t dist -confProb 10000 0.5 -PC -F -AWF onlyoverall"
 	done
-done | parallel -j ${NCORES} --joblog ${LOGPATH}/parallel_conefor_eco_part2.log
+done | parallel -j ${NCORES}
 
 ## SORT THE RESULTS FILE FOR ECOREGIONS WITHOUT TRANS BY ISO3 SKIPPING THE HEADER
 ## A NEW FILE IS CREATED AND THE ORIGINAL DELETED TO AVOID MESSING WITH THE FILES OF THE SECOND CYCLE

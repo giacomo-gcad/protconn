@@ -10,14 +10,12 @@ SERVICEDIR="/globes/USERS/GIACOMO/protconn/scripts"
 source ${SERVICEDIR}/protconn.conf
 dbpar="-h ${host} -U ${user} -d ${db}"
 
-## CREATE LOG FOLDER
-mkdir -p ${LOGPATH}
 
 ###########################
 ## 1) IMPORT PREPROCESSED WDPA AND SIMPLIFY FEATURES
 echo "Now importing and simplifying features..."
 
-psql ${dbpar} -t -v OUTSCHEMA=${protconn_schema} -v WDPADATE=${wdpadate} -v WDPASCHEMA=${wdpa_schema} -v OUTNAME=${wdpa_all_relevant_simpl} -f ./sql/simplify_wdpa_all_relevant.sql 
+psql ${dbpar} -t -v OUTSCHEMA=${protconn_schema} -v WDPADATE=${wdpadate} -v WDPASCHEMA=${wdpa_schema} -v INNAME=${wdpa_all_relevant} -v OUTNAME=${wdpa_all_relevant_simpl} -f ./sql/simplify_wdpa_all_relevant.sql 
 
 wait
 echo "Features simplified."
