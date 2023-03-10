@@ -1,21 +1,19 @@
 #!/bin/bash
 ## PROTCONN: SCRIPT TO SIMPLIFY wdpa_all_relevant in PG
-## TO BE RUN AFTER RUNNING ARCPY SCRIPT a1country.py
 
 date
 start1=`date +%s`
 
 ##READ VARIABLES FROM CONFIGURATION FILE
-SERVICEDIR="/globes/USERS/GIACOMO/protconn/scripts"
+SERVICEDIR="/globes/USERS/GIACOMO/protconn/scripts/202302"
 source ${SERVICEDIR}/protconn.conf
 dbpar="-h ${host} -U ${user} -d ${db}"
 
-
 ############################################################################################################
-## 1) IMPORT PREPROCESSED WDPA AND SIMPLIFY FEATURES (N.B. check PA_IN parameter before running)
+## 1) IMPORT PREPROCESSED WDPA AND SIMPLIFY FEATURES
 echo "Now importing and simplifying features..."
 
-psql ${dbpar} -t -v OUTSCHEMA=${protconn_schema} -v WDPADATE=${wdpadate} -v WDPASCHEMA=${wdpa_schema} -v PA_IN=${pa_input_with_oecm} -v INNAME=${wdpa_all_relevant} -v OUTNAME=${wdpa_all_relevant_simpl} -f ./sql/simplify_wdpa_all_relevant.sql 
+psql ${dbpar} -t -v OUTSCHEMA=${protconn_schema} -v WDPADATE=${wdpadate} -v WDPASCHEMA=${wdpa_schema} -v PA_IN=${pa_input_no_oecm} -v INNAME=${wdpa_all_relevant} -v OUTNAME=${wdpa_all_relevant_simpl} -f ./sql/simplify_wdpa_all_relevant_no_oecm.sql 
 
 wait
 echo "Features simplified."
@@ -44,4 +42,3 @@ echo "-----------------------------------------------------"
 echo "Now proceed with the arcpy script wdpa_country.py"
 
 exit
-

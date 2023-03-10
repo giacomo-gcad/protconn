@@ -49,11 +49,13 @@ a.1. [exec_simplify_wdpa_all_relevant.sh](gis_proc/exec_simplify_wdpa_all_releva
   
 a.2. [wdpa_country.py](gis_proc/arcpy/wdpa_country.py)  
    - Copy GAUL layer from existing BaseLayers.gdb.  
-   - Import shapefile with simplified wdpa, process multi iso3 polygons, prepare wdpa flat final, ready for calculation of distances in PostGis (ST_distance).  
+   - Import shapefile with simplified wdpa.
+   - Process multi iso3 polygons: Pas multi-iso3 are intersected with administrative boundaries and each resulting polygon is assigned to its own country
+   - Combine PAs no-multi iso3 with PAs multi-iso3 and prepare a final layer of flattened PAs, ready for calculation of distances in PostGis (ST_distance).  
    - Generate near table (much slower than the same operation in postgis, described below. Presently it's commented and not executed).  
   
 a.3. [exec_near_table_country_parallel.sh](gis_proc/exec_near_table_country_parallel.sh)  
-   - Import wdpa from gdb, export attribute table as .txt file, repair geometries and compute Near Table in Postgis for countries. It runs in parallel on 64 cores.    
+   - Import wdpa from gdb, export attribute table as .txt file, repair geometries and compute distances (using ST_Distance). It runs in parallel on 64 cores.    
 
 Overall processing time is approximately 400 minutes (120 minutes for steps a.1-a.2, 280 minutes for step a.3).  
 
@@ -68,11 +70,13 @@ b.2. [exec_simplify_gaul_bound_correction.sh](gis_proc/exec_simplify_gaul_bound_
    - Simplify polygons.  
 
 b.3. [wdpa_country_boundcorr_2.py](gis_proc/arcpy/wdpa_country_boundcorr_2.py)  
-   - Import simplified polygons, merge gaul and wdpa, repair geometries.  
+   - Import simplified polygons.
+   - Merge gaul and wdpa, Area=0 is assigned to features coming from gaul.
+   - Repair geometries.  
    - Generate near table (much slower than the same operation in postgis, described below. Presently it's commented and not executed).  
 
 b.4. [exec_near_table_country_bcorr_parallel.sh](gis_proc/exec_near_table_country_bcorr_parallel.sh)  
-   - Import relevant layer from gdb, export attribute table as .txt file, repair geometries and compute Near Table in Postgis for countries with bound correction. It runs in parallel on 72 cores.  
+   - Import relevant layer from gdb, export attribute table as .txt file, repair geometries and nd compute distances (using ST_Distance) for countries with bound correction. It runs in parallel on 72 cores.  
 
 Overall processing time is approximately 280 minutes (30 minutes for steps b.1-b.3, 250 minutes for step b.4).  
 
@@ -102,7 +106,7 @@ Conefor analysis is executed five times:
 
 2) for countries, excluding transboundary PAs;  
 
-3) for countries with bound correction (i.e. considering also PAs that are up to a given maximum distance - 300 km);  
+3) for countries with bound correction (i.e. considering also PAs that are up to a given maximum distance - 100 km);  
 
 4) for ecoregions, including transboundary PAs;  
 
@@ -112,8 +116,6 @@ For each of the above runs, input data used (all produced with GIS processing st
 
    - attributes table file. It **must** include a unique identifier (iso3 as text for countries, eco_id as integer for ecoregions) and area in km2 for each object.  
    - distances file, generated either in postgis or arcpy.  
-
-Each run generates a pair of text files (nodes file and distances file) for each object (country or ecoregion), stored in a temporary folder:  
 
 For each run, first a R script is executed to prepare a pair of text files (nodes file and distances file) for each object (country or ecoregion), then the executable conefor is run  for each object (country or ecoregion) in parallel, using 48 threads.
 Once completed all the confefor cycles, two R scripts are run to postprocess/aggregate the outputs from analysis and write final ProtConn results.  
@@ -144,4 +146,3 @@ In postprocessing/aggregation phase, the two R scripts involved are:
 
    - [postproc_protconn_country.R](conefor/R_scripts/postproc_protconn_country.R)  
    - [postproc_protconn_eco.R](conefor/R_scripts/postproc_protconn_eco.R)  
-

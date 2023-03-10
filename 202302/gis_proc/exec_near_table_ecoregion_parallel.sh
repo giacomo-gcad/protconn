@@ -11,8 +11,8 @@ date
 first_start=`date +%s`
 
 # READ VARIABLES FROM CONFIGURATION FILE
-SERVICEDIR="/globes/USERS/GIACOMO/protconn/scripts"
-source ${SERVICEDIR}/protconn.conf
+SERVICEDIR="/globes/USERS/GIACOMO/protconn/scripts/202302"
+source ${SERVICEDIR}/protconn_no_oecm.conf
 dbpar="-h ${host} -U ${user} -d ${db}"
 dbpar2="-h ${host} -U ${user} -d ${db} -w"
 

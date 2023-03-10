@@ -1,2 +1,0 @@
-Prefix	Distance	Probability	EC(PC)	
-BFA_2022	10000	0.5	22612	

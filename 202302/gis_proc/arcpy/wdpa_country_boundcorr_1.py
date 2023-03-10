@@ -24,7 +24,7 @@ print('-------------------------------------------------------')
 arcpy.env.overwriteOutput = True
 
 # Output Geodatabase
-wdpadate="202301"
+wdpadate="202302"
 outpath="Z:/globes/USERS/GIACOMO/protconn/data/"+wdpadate
 outgdb_name="ProtConn_"+wdpadate+"_oecm.gdb"
 outgdb_fullpath = outpath+"/"+outgdb_name+"/"

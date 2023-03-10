@@ -1,0 +1,11 @@
+Sequence for gis processing part:
+
+1. exec_simplify_wdpa_all_relevant.sh
+2. arcpy/wdpa_country.py
+3. exec_near_table_country_parallel.sh
+4. arcpy/wdpa_country_boundcorr_1.py
+5. exec_simplify_gaul_bound_correction.sh
+6. arcpy/wdpa_country_boundcorr_2.py
+7. exec_near_table_country_bcorr_parallel.sh
+8. arcpy/wdpa_ecoregion.py
+9. exec_near_table_ecoregion_parallel.sh

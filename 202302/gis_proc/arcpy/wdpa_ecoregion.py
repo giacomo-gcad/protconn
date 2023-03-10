@@ -25,9 +25,9 @@ arcpy.env.overwriteOutput = True
 arcpy.env.workspace = "Z:/globes/USERS/GIACOMO/protconn/data/"
 
 # Output Geodatabase
-wdpadate="202301"
-outpath="Z:/globes/USERS/GIACOMO/protconn/data/"+wdpadate
-outgdb_name="ProtConn_"+wdpadate+"_oecm.gdb"
+wdpadate="202302"
+outpath="Z:/globes/USERS/GIACOMO/protconn/data/"+wdpadate+"/no_oecm"
+outgdb_name="ProtConn_"+wdpadate+"_no_oecm.gdb"
 outgdb_fullpath = outpath+"/"+outgdb_name+"/"
 
 # Output layers
@@ -47,21 +47,21 @@ all_distances_ecoregions_200km = outgdb_fullpath+"all_distances_ecoregions_200km
 outfile_attr=outpath+"/"+"attrib_table_ecoregions_"+wdpadate+"_arcpy.txt"
 outfile_dist=outpath+"/"+"all_distances_ecoregions_200km_arcpy.txt"
 
-# Process: copy ecoregions from BaseLayers.gdb
-arcpy.FeatureClassToFeatureClass_conversion(in_features = ecoregions_source, out_path = outgdb_fullpath, out_name="ecoregions_2019", where_clause="", config_keyword="")
+# # Process: copy ecoregions from BaseLayers.gdb
+# arcpy.FeatureClassToFeatureClass_conversion(in_features = ecoregions_source, out_path = outgdb_fullpath, out_name="ecoregions_2019", where_clause="", config_keyword="")
 
-# Process: Make Feature Layer terrestrial ecoreg
-arcpy.MakeFeatureLayer_management(ecoregions, terrestrial_ecoregions_lyr, "source = 'teow'", "", "OBJECTID OBJECTID VISIBLE NONE;Shape Shape VISIBLE NONE;first_level first_level VISIBLE NONE;second_level_code second_level_code HIDDEN NONE;second_level second_level HIDDEN NONE;third_level_code third_level_code HIDDEN NONE;third_level third_level HIDDEN NONE;source source HIDDEN NONE;sqkm sqkm HIDDEN NONE;Shape_Length Shape_Length HIDDEN NONE;Shape_Area Shape_Area HIDDEN NONE")
+# # Process: Make Feature Layer terrestrial ecoreg
+# arcpy.MakeFeatureLayer_management(ecoregions, terrestrial_ecoregions_lyr, "source = 'teow'", "", "OBJECTID OBJECTID VISIBLE NONE;Shape Shape VISIBLE NONE;first_level first_level VISIBLE NONE;second_level_code second_level_code HIDDEN NONE;second_level second_level HIDDEN NONE;third_level_code third_level_code HIDDEN NONE;third_level third_level HIDDEN NONE;source source HIDDEN NONE;sqkm sqkm HIDDEN NONE;Shape_Length Shape_Length HIDDEN NONE;Shape_Area Shape_Area HIDDEN NONE")
 
-# Process: Copy Features
-arcpy.CopyFeatures_management(terrestrial_ecoregions_lyr, terrestrial_ecoregions, "", "0", "0", "0")
+# # Process: Copy Features
+# arcpy.CopyFeatures_management(terrestrial_ecoregions_lyr, terrestrial_ecoregions, "", "0", "0", "0")
 
-# Process: Add Field
-arcpy.AddField_management(terrestrial_ecoregions, "ECO_Id_int", "LONG", "", "", "", "", "NULLABLE", "NON_REQUIRED", "")
+# # Process: Add Field
+# arcpy.AddField_management(terrestrial_ecoregions, "ECO_Id_int", "LONG", "", "", "", "", "NULLABLE", "NON_REQUIRED", "")
 
-# Process: Calculate Field
-arcpy.CalculateField_management(terrestrial_ecoregions, "ECO_Id_int", "float(!first_leve!)", "PYTHON_9.3", "")
-print("Terrestrial ecoregions selected")
+# # Process: Calculate Field
+# arcpy.CalculateField_management(terrestrial_ecoregions, "ECO_Id_int", "float(!first_leve!)", "PYTHON_9.3", "")
+# print("Terrestrial ecoregions selected")
 
 # Process: Dissolve wdpa
 arcpy.Dissolve_management(wdpa_all_relevant_simpl, wdpa_dissolved_for_ecoregions, "", "", "SINGLE_PART", "DISSOLVE_LINES")

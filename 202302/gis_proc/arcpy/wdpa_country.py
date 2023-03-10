@@ -21,9 +21,9 @@ print("PROCEDURE STARTED at ", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 print('-------------------------------------------------------')
 
 # Working Geodatabase
-wdpadate="202301"
+wdpadate="202302"
 outpath="Z:/globes/USERS/GIACOMO/protconn/data/"+wdpadate
-outgdb_name="ProtConn_"+wdpadate+"_oecm.gdb"
+outgdb_name="ProtConn_"+wdpadate+"_no_oecm.gdb"
 outgdb_fullpath = outpath+"/"+outgdb_name+"/"
 
 # Set environment variables
@@ -67,7 +67,7 @@ else:
 	arcpy.CreateFileGDB_management(outpath, outgdb_name)
 	print(outgdb_name, " created")
 
-# Process: copy gaul from BaseLayers.gdb
+## Process: copy gaul from BaseLayers.gdb
 arcpy.FeatureClassToFeatureClass_conversion(in_features = gaul_source, out_path = outgdb_fullpath, out_name="gaul", where_clause="", config_keyword="")
 print("Gaul imported")
 

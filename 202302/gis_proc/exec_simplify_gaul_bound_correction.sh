@@ -6,7 +6,7 @@ date
 start1=`date +%s`
 
 ##READ VARIABLES FROM CONFIGURATION FILE
-SERVICEDIR="/globes/USERS/GIACOMO/protconn/scripts"
+SERVICEDIR="/globes/USERS/GIACOMO/protconn/scripts/202302"
 source ${SERVICEDIR}/protconn.conf
 dbpar="-h ${host} -U ${user} -d ${db}"
 

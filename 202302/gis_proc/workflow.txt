@@ -1,0 +1,29 @@
+PROTCONN FEBRUARY 2023 WITH OECM (SU GOSLING)
+
+1. exec_simplify_wdpa_all_relevant.sh DONE
+2. arcpy/wdpa_country.py DONE
+3. exec_near_table_country_parallel.sh DONE
+	4. arcpy/wdpa_country_boundcorr_1.py NOT NEEDED
+	5. exec_simplify_gaul_bound_correction.sh NOT NEEDED
+6. arcpy/wdpa_country_boundcorr_2.py DONE
+7. exec_near_table_country_bcorr_parallel.sh DONE
+8. arcpy/wdpa_ecoregion.py DONE
+9. exec_near_table_ecoregion_parallel.sh DONE
+
+
+10 exec_full_conefor_master.sh ONGOING BUT NEEDS CHECK AND CORRECTIONS
+
+-----------------------------------------------------------------
+PROTCONN FEBRUARY 2023 WITHOUT OECM
+
+1. exec_simplify_wdpa_all_relevant_no_oecm.sh DONE  
+2. arcpy/wdpa_country.py  DONE
+3. exec_near_table_country_parallel.sh  DONE
+	4. arcpy/wdpa_country_boundcorr_1.py NOT NEEDED
+	5. exec_simplify_gaul_bound_correction.sh NOT NEEDED
+6. arcpy/wdpa_country_boundcorr_2.py  DONE
+7. exec_near_table_country_bcorr_parallel.sh  DONE
+8. arcpy/wdpa_ecoregion.py  DONE
+9. exec_near_table_ecoregion_parallel.sh DONE
+
+10 exec_full_conefor_master.sh DONE
