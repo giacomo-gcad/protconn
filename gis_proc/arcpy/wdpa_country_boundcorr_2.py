@@ -34,9 +34,9 @@ db="wolfe"
 protconn_schema="ind_protconn"
 
 # Output Geodatabase
-wdpadate="202301"
-outpath="Z:/globes/USERS/GIACOMO/protconn/data/"+wdpadate
-outgdb_name="ProtConn_"+wdpadate+"_oecm.gdb"
+wdpadate="202408"
+outpath="Z:/globes/USERS/GIACOMO/protconn/data/"+wdpadate+"_gaul"
+outgdb_name="ProtConn_"+wdpadate+".gdb"
 outgdb_fullpath = outpath+"/"+outgdb_name+"/"
 
 # Local variables:
@@ -62,11 +62,11 @@ print ("\n"*100)
 arcpy.CreateDatabaseConnection_management(out_folder_path=DBConnectionFilepath, out_name=host, database_platform="POSTGRESQL", instance=host, account_authentication="DATABASE_AUTH", username="h05ibex", password=pw, save_user_pass="SAVE_USERNAME", database=db, schema=protconn_schema)
 print("Connection to DB created")
 
-# Process: Feature Class to Feature Class
-# arcpy.FeatureClassToFeatureClass_conversion(input_shp, outgdb_fullpath, gaul_singleparted_shape_simpl, "", "", "")
-in_table=DBConnectionFilepath+host+DBConnectionExt+"/"+db+"."+protconn_schema+"."+gaul_singleparted_shape_simpl
-arcpy.FeatureClassToFeatureClass_conversion(in_features=in_table,out_path=outgdb_fullpath,out_name=gaul_singleparted_shape_simpl)
-print("gaul_singleparted_shape_simpl imported")
+# # Process: Feature Class to Feature Class
+# # arcpy.FeatureClassToFeatureClass_conversion(input_shp, outgdb_fullpath, gaul_singleparted_shape_simpl, "", "", "")
+# in_table=DBConnectionFilepath+host+DBConnectionExt+"/"+db+"."+protconn_schema+"."+gaul_singleparted_shape_simpl
+# arcpy.FeatureClassToFeatureClass_conversion(in_features=in_table,out_path=outgdb_fullpath,out_name=gaul_singleparted_shape_simpl)
+# print("gaul_singleparted_shape_simpl imported")
 
 # Process: Define Projection
 arcpy.DefineProjection_management(gaul_singleparted_shape_simpl_full_path, "GEOGCS['GCS_WGS_1984',DATUM['D_WGS_1984',SPHEROID['WGS_1984',6378137.0,298.257223563]],PRIMEM['Greenwich',0.0],UNIT['Degree',0.0174532925199433]]")

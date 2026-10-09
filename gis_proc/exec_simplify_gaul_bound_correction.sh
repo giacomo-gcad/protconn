@@ -8,6 +8,7 @@ start1=`date +%s`
 ##READ VARIABLES FROM CONFIGURATION FILE
 SERVICEDIR="/globes/USERS/GIACOMO/protconn/scripts"
 source ${SERVICEDIR}/protconn.conf
+
 dbpar="-h ${host} -U ${user} -d ${db}"
 
 ## 1) IMPORT GAUL SINGLE PART IN POSTGRES

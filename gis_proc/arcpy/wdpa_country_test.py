@@ -21,9 +21,10 @@ print("PROCEDURE STARTED at ", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 print('-------------------------------------------------------')
 
 # Working Geodatabase
-wdpadate="202408"
-outpath="Z:/globes/USERS/GIACOMO/protconn/data/"+wdpadate+"_gaul"
-outgdb_name="ProtConn_"+wdpadate+".gdb"
+wdpadate="202302"
+outpath="Z:/globes/USERS/GIACOMO/protconn/data/"+wdpadate
+# outgdb_name="ProtConn_"+wdpadate+".gdb"
+outgdb_name="test_ungeo.gdb"
 outgdb_fullpath = outpath+"/"+outgdb_name+"/"
 
 # Set environment variables
@@ -38,8 +39,11 @@ wdpa_all_relevant_simpl = "wdpa_all_relevant_simpl"
 wdpa_all_relevant_simpl_fullpath = outgdb_fullpath+wdpa_all_relevant_simpl
 wdpa_all_relevant_simpl_dissolved_ISO3 = outgdb_fullpath+"wdpa_all_relevant_simpl_dissolved_ISO3"
 dissolved_iso3_over_1_km2 = outgdb_fullpath+"dissolved_iso3_over_1_km2"
-gaul_source="Z:/globes/USERS/GIACOMO/protconn/data/BaseLayers.gdb/gaul"
-gaul = outgdb_fullpath+"gaul"
+# gaul_source="Z:/globes/USERS/GIACOMO/protconn/data/BaseLayers.gdb/gaul"
+#gaul = outgdb_fullpath+"gaul"
+gaul_source="Z:/globes/USERS/GIACOMO/protconn/data/BaseLayers.gdb/ungeo_national"
+gaul_fc="ungeo_national"
+gaul = outgdb_fullpath+"ungeo_national"
 wdpa_all_relevant_simpl_dissolved_iso3_clipped_land = outgdb_fullpath+"wdpa_all_relevant_simpl_dissolved_iso3_clipped_land"
 dissolved_iso3_clipped_land_over_1_km2 = outgdb_fullpath+"dissolved_iso3_clipped_land_over_1_km2"
 # select_only_multi_iso3 = dissolved_iso3_clipped_land_over_1_km2
@@ -68,19 +72,19 @@ else:
 	print(outgdb_name, " created")
 
 # Process: copy gaul from BaseLayers.gdb
-arcpy.FeatureClassToFeatureClass_conversion(in_features = gaul_source, out_path = outgdb_fullpath, out_name="gaul", where_clause="", config_keyword="")
-print("Gaul imported")
+arcpy.FeatureClassToFeatureClass_conversion(in_features = gaul_source, out_path = outgdb_fullpath, out_name = gaul_fc, where_clause="", config_keyword="")
+print("Administrative boundaries imported")
 
 # Process: Feature Class to Feature Class
 # arcpy.FeatureClassToFeatureClass_conversion(input_shp, outgdb_fullpath, wdpa_all_relevant_simpl, "", "", "")
 
 # Process: Define Projection
-# arcpy.DefineProjection_management(wdpa_all_relevant_simpl_fullpath, "GEOGCS['GCS_WGS_1984',DATUM['D_WGS_1984',SPHEROID['WGS_1984',6378137.0,298.257223563]],PRIMEM['Greenwich',0.0],UNIT['Degree',0.0174532925199433]]")
-# print("Simplified features imported")
+arcpy.DefineProjection_management(wdpa_all_relevant_simpl_fullpath, "GEOGCS['GCS_WGS_1984',DATUM['D_WGS_1984',SPHEROID['WGS_1984',6378137.0,298.257223563]],PRIMEM['Greenwich',0.0],UNIT['Degree',0.0174532925199433]]")
+print("Simplified features imported")
 
 # Process: Repair Geometry (2)
-# arcpy.RepairGeometry_management(wdpa_all_relevant_simpl_fullpath, "DELETE_NULL")
-# print("Geometries repaired")
+arcpy.RepairGeometry_management(wdpa_all_relevant_simpl_fullpath, "DELETE_NULL")
+print("Geometries repaired")
 
 # Process: Dissolve
 arcpy.Dissolve_management(wdpa_all_relevant_simpl_fullpath, wdpa_all_relevant_simpl_dissolved_ISO3, "iso3", "", "SINGLE_PART", "DISSOLVE_LINES")
@@ -104,7 +108,7 @@ print("Feature Layer over 1km2 created")
 
 # Process: Clip
 arcpy.Clip_analysis(dissolved_iso3_over_1_km2, gaul, wdpa_all_relevant_simpl_dissolved_iso3_clipped_land, "")
-print("Features clipped on gaul")
+print("Features clipped on adm boundaries")
 
 # Process: Add Geometry Attributes (2)
 arcpy.AddGeometryAttributes_management(wdpa_all_relevant_simpl_dissolved_iso3_clipped_land, "AREA_GEODESIC", "", "SQUARE_KILOMETERS", "GEOGCS['GCS_WGS_1984',DATUM['D_WGS_1984',SPHEROID['WGS_1984',6378137.0,298.257223563]],PRIMEM['Greenwich',0.0],UNIT['Degree',0.0174532925199433]]")
@@ -145,7 +149,7 @@ arcpy.Erase_analysis(iso3_multi, iso3_no_multi, iso3_multi_erased, "")
 
 # Process: Intersect
 arcpy.Intersect_analysis([iso3_multi_erased,gaul], intersected_gaul_erased, "ALL", "", "INPUT")
-print("Multi iso3 erased and intersected with gaul")
+print("Multi iso3 erased and intersected with adm boundaries")
 
 # Process: Add Field myISO3 (2)
 arcpy.AddField_management(intersected_gaul_erased, "myISO3", "TEXT", "", "", "", "", "NULLABLE", "NON_REQUIRED", "")

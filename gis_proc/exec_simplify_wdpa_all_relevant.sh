@@ -1,6 +1,5 @@
 #!/bin/bash
 ## PROTCONN: SCRIPT TO SIMPLIFY wdpa_all_relevant in PG
-## TO BE RUN AFTER RUNNING ARCPY SCRIPT a1country.py
 
 date
 start1=`date +%s`
@@ -9,7 +8,6 @@ start1=`date +%s`
 SERVICEDIR="/globes/USERS/GIACOMO/protconn/scripts"
 source ${SERVICEDIR}/protconn.conf
 dbpar="-h ${host} -U ${user} -d ${db}"
-
 
 ############################################################################################################
 ## 1) IMPORT PREPROCESSED WDPA AND SIMPLIFY FEATURES (N.B. check PA_IN parameter before running)

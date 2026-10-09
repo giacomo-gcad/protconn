@@ -25,13 +25,11 @@ DROP COLUMN geom_was_invalid;
 -- STEP 2 compute near table
 -- create 2 temp tables with spatial index
 CREATE TEMPORARY TABLE temp1_:CYCLE_N AS
---(SELECT objectid "IN_FID", shape::geography as gg1 FROM :INPUT_FULL );
-(SELECT nodeid "IN_FID", shape::geography as gg1 FROM :INPUT_FULL );
+(SELECT objectid "IN_FID", shape::geography as gg1 FROM :INPUT_FULL );
 CREATE INDEX temp1_idx_:CYCLE_N ON temp1_:CYCLE_N USING GIST (geography(gg1));
 
 CREATE TEMPORARY TABLE temp2_:CYCLE_N AS
---(SELECT objectid "NEAR_FID", shape::geography as gg2 FROM :OUTSCHEMA.:INTABLE);
-(SELECT nodeid "NEAR_FID", shape::geography as gg2 FROM :OUTSCHEMA.:INTABLE);
+(SELECT objectid "NEAR_FID", shape::geography as gg2 FROM :OUTSCHEMA.:INTABLE);
 CREATE INDEX temp2_idx_:CYCLE_N ON temp2_:CYCLE_N USING GIST (geography(gg2));
 
 --create distances table

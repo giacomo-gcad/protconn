@@ -14,6 +14,7 @@ first_start=`date +%s`
 # READ VARIABLES FROM CONFIGURATION FILE
 SERVICEDIR="/globes/USERS/GIACOMO/protconn/scripts"
 source ${SERVICEDIR}/protconn.conf
+
 dbpar="-h ${host} -U ${user} -d ${db}"
 dbpar2="-h ${host} -U ${user} -d ${db} -w"
 
@@ -36,7 +37,7 @@ echo "GDB layer imported in PG as table ${protconn_schema}.${wdpa_plus_land_flat
 
 ############################################
 ## 2) PREPARE AND EXPORT ATTRIBUTES TABLE
-psql ${dbpar} -t -v OUTSCHEMA=${protconn_schema} -v INTABLE=${wdpa_plus_land_flat_1km_final} -v ATTRIBS=${raw_nodes_bound} -f ${SQLDIR}/prepare_atts_country.sql
+psql ${dbpar} -t -v OUTSCHEMA=${protconn_schema} -v INTABLE=${wdpa_plus_land_flat_1km_final} -v ATTRIBS=${raw_nodes_bound} -f ${SQLDIR}/prepare_atts_country_boundcorr.sql
 echo "\copy ${protconn_schema}.${raw_nodes_bound} TO ${raw_nodes_file_bound} delimiter ',' csv HEADER" > ${SQLDIR}/export_atts_table_to_txt.sql
 psql ${dbpar} -t -f ${SQLDIR}/export_atts_table_to_txt.sql
 
@@ -49,9 +50,11 @@ echo "Attributs Table for Country with Bound Correction generated in "${runtime}
 ## 3) REPAIR GEOMETRIES AND GENERATE NEAR TABLE IN POSTGIS
 echo "Now generating Near Table..."
 
+divider=256
+
 string_n_obj=`psql ${dbpar} -c 'SELECT COUNT(objectid) FROM '${protconn_schema}'.'${wdpa_plus_land_flat_1km_final}''`
 n_obj=`echo ${string_n_obj}| awk '{print $3}'`
-blocksize=$((${n_obj} / 256 ))
+blocksize=$(((${n_obj} / ${divider} ) + 1))
 echo "-----------------------------------"
 echo "Total n. of objects is: "${n_obj}
 echo "Block size is: "${blocksize}
@@ -60,7 +63,7 @@ echo "-----------------------------------"
 start_n=0
 cycle_n=1
 
-for TIL in $(for i in $(eval echo {0..256}); do ((start=${blocksize}*$i)); echo -n $start_n" "; done)
+for TIL in $(for i in $(eval echo {0..${divider}}); do ((start=${blocksize}*$i)); echo -n $start_n" "; done)
 do
 	end=$(( ${start_n} + ${blocksize} ))
 	str1="OFFSET"
@@ -89,7 +92,7 @@ psql ${dbpar} -t -c "${sql_mergedtable}"
 
 start_n=0
 cycle_n=1
-for TIL in $(for i in $(eval echo {0..256}); do ((start=${blocksize}*$i)); echo -n $start_n" "; done)
+for TIL in $(for i in $(eval echo {0..${divider}}); do ((start=${blocksize}*$i)); echo -n $start_n" "; done)
 do
 	merge_tab="INSERT INTO ${protconn_schema}.${raw_distance_bound} (\"OBJECTID\",\"IN_FID\",\"NEAR_FID\",\"NEAR_DIST\",\"NEAR_RANK\")
 		SELECT \"OBJECTID\",\"IN_FID\",\"NEAR_FID\",\"NEAR_DIST\",\"NEAR_RANK\" FROM ${protconn_schema}.${raw_distance_bound_block}${cycle_n}"

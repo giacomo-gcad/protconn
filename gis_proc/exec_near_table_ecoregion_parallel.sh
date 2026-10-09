@@ -12,7 +12,12 @@ first_start=`date +%s`
 
 # READ VARIABLES FROM CONFIGURATION FILE
 SERVICEDIR="/globes/USERS/GIACOMO/protconn/scripts"
-source ${SERVICEDIR}/protconn.conf
+
+################################################
+## EDITED ON 20230502 (PPA ANALYSIS)
+source ${SERVICEDIR}/protconn_ppa.conf
+################################################
+
 dbpar="-h ${host} -U ${user} -d ${db}"
 dbpar2="-h ${host} -U ${user} -d ${db} -w"
 
@@ -49,9 +54,11 @@ echo "Attributs Table for Ecoregions generated in "${runtime}" minutes"
 ## 3) REPAIR GEOMETRIES AND GENERATE NEAR TABLE IN POSTGIS
 echo "Now generating Near Table..."
 
+divider=256
+
 string_n_obj=`psql ${dbpar} -c 'SELECT COUNT(objectid) FROM '${protconn_schema}'.'${wdpa_ecoregions_final}''`
 n_obj=`echo ${string_n_obj}| awk '{print $3}'`
-blocksize=$((${n_obj} / 256 ))
+blocksize=$(((${n_obj} / ${divider} ) + 1))
 echo "-----------------------------------"
 echo "Total n. of objects is: "${n_obj}
 echo "Block size is: "${blocksize}
@@ -59,7 +66,7 @@ echo "-----------------------------------"
 
 start_n=0
 cycle_n=1
-for TIL in $(for i in $(eval echo {0..256}); do ((start=${blocksize}*$i)); echo -n $start_n" "; done)
+for TIL in $(for i in $(eval echo {0..${divider}}); do ((start=${blocksize}*$i)); echo -n $start_n" "; done)
 do
 	end=$(( ${start_n} + ${blocksize} ))
 	str1="OFFSET"
@@ -87,7 +94,7 @@ psql ${dbpar} -t -c "${sql_merge}"
 
 start_n=0
 cycle_n=1
-for TIL in $(for i in $(eval echo {0..256}); do ((start=${blocksize}*$i)); echo -n $start_n" "; done)
+for TIL in $(for i in $(eval echo {0..${divider}}); do ((start=${blocksize}*$i)); echo -n $start_n" "; done)
 do
 	merge_tab="INSERT INTO ${protconn_schema}.${raw_distance_eco} (\"OBJECTID\",\"IN_FID\",\"NEAR_FID\",\"NEAR_DIST\",\"NEAR_RANK\")
 		SELECT \"OBJECTID\",\"IN_FID\",\"NEAR_FID\",\"NEAR_DIST\",\"NEAR_RANK\" FROM ${protconn_schema}.${raw_distance_eco_block}${cycle_n}"
@@ -109,7 +116,7 @@ runtime=$(((end4-end3) / 60))
 echo "Near Table exported to txt file in "${runtime}" minutes"
 echo " "
 echo "------------------------------------------------------------------------------"
-runtime_tot=$(((end3-first_start) / 60))
+runtime_tot=$(((end4-first_start) / 60))
 
 echo "Computation of Near Table foe ecoregions performed in "${runtime_tot}" minutes"
 exit

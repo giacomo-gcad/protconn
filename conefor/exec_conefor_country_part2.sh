@@ -8,8 +8,8 @@ echo "--------------------------------------------------------------------------
 startdate_cp2=`date +%s`
 
 ##READ VARIABLES FROM CONFIGURATION FILE
-BASEDIR="/globes/USERS/GIACOMO/protconn/scripts"
-source ${BASEDIR}/protconn.conf
+SERVICEDIR="/globes/USERS/GIACOMO/protconn/scripts"
+source ${SERVICEDIR}/protconn.conf
 
 NCORES=48
 ((ALLCNT=$(ls ${cnt_without_trans}/nodes*|wc -l)+1))

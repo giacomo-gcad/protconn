@@ -8,12 +8,12 @@ echo "--------------------------------------------------------------------------
 startdate_bc=`date +%s`
 
 # READ VARIABLES FROM CONFIGURATION FILE
-BASEDIR="/globes/USERS/GIACOMO/protconn/scripts"
-source ${BASEDIR}/protconn.conf
+SERVICEDIR="/globes/USERS/GIACOMO/protconn/scripts"
+source ${SERVICEDIR}/protconn.conf
 
 ## PARALLEL CONEFOR CYCLE: RUN CONEFOR FOR COUNTRIES WITH TRANS
 echo "Now running Conefor for bound correction  in parallel..."
-NCORES=42
+NCORES=60
 ((ALLCNT=$(ls ${bound_corr}/nodes*|wc -l)+1))
 ((TILESIZE=(${ALLCNT}+(${NCORES}-1))/${NCORES}))
 
